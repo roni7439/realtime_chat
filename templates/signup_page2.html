@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    {% load static %}
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login | Sibilo</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: 'Segoe UI', sans-serif;
+        background: linear-gradient(to right, #0f0c29, #302b63, #24243e);
+        height: 100vh;
+        display: flex;
+      }
+      
+      .left,
+      .right {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: white;
+      }
+      
+      .left {
+        flex-direction: column;
+        padding: 2rem;
+        position: relative;
+      }
+      
+      .left h1 {
+        font-size: 3rem;
+        font-weight: bold;
+      }
+      
+      .left p {
+        font-size: 1.2rem;
+        margin-bottom: 0.5rem;
+      }
+      
+      .right {
+        background-color: #0e0e2c;
+        flex-direction: column;
+        padding: 2rem;
+      }
+      
+      .right h2 {
+        font-family: 'Georgia', serif;
+        font-style: italic;
+        font-size: 2rem;
+        margin-bottom: 1.5rem;
+      }
+      
+      .form-control {
+        background-color: transparent;
+        border: 1px solid #4b4b75;
+        color: #fff;
+      }
+      
+      .form-control::placeholder {
+        color: #888;
+      }
+      
+      .form-control:focus {
+        background-color: transparent;
+        color: #fff;
+        box-shadow: none;
+        border-color: #6c63ff;
+      }
+      
+      .btn-login {
+        background-color: #4a42ec;
+        color: white;
+        width: 100%;
+        padding: 0.7rem;
+        border-radius: 25px;
+        font-weight: 500;
+        border: none;
+      }
+      
+      .btn-login:hover {
+        background-color: #3b36c6;
+      }
+      
+      @media screen and (max-width: 768px) {
+        body {
+          flex-direction: column;
+        }
+      
+        .left,
+        .right {
+          flex: none;
+          width: 100%;
+          height: 50vh;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="left text-center">
+      <h2>💬 🤖</h2>
+      <p>Try Something New. Try Sibilo.</p>
+      <h1>Safe. Simple. Easy</h1>
+    </div>9999999999999
+
+    <div class="right">
+      <form method="POST" action="{% url 'signup_page2' %}" style="width: 300px;">
+        {% csrf_token %}
+        <h2 class="text-center">sibilo</h2>
+
+        {% if messages %}
+          {% for message in messages %}
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+              <strong>{{ message }}</strong>
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+          {% endfor %}
+        {% endif %}
+
+        <div class="mb-3">
+          <input type="email" name="email" class="form-control" placeholder="Email address" required />
+        </div>
+        <div class="mb-3">
+          <input type="text" name="name" class="form-control" placeholder="Enter user name" required />
+        </div>
+        <div class="mb-3">
+          <input type="password" name="password" class="form-control" placeholder="Password" required />
+        </div>
+        <p>
+          Already have an Acc <a href="{% url 'login_page2' %}">Login</a>
+        </p>
+        <button type="submit" class="btn-login">Signup</button>
+      </form>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sibilo - Chat Interface</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <style>
+  * {
+    box-sizing: border-box;
+  }
+  a{
+    text-decoration: none;
+    color: black;
+  }
+  body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background-color: #211c57ff;
+    color: #fff;
+  }
+  .line-header {
+    height: 60px;
+    background-color: #1b1738;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    border-bottom: 1px solid #333;
+  }
+
+  .line-header .title {
+    font-family: 'Georgia', serif;
+    font-size: 22px;
+    font-style: italic;
+  }
+
+  .logout-btn {
+    padding: 6px 14px;
+    background: #e3e3e3;
+    color: black;
+    border: none;
+    border-radius: 20px;
+    font-size: 14px;
+    cursor: pointer;
+  }
+
+.chat-wrapper {
+  display: flex;
+  height: calc(100vh - 60px);
+  overflow: hidden;
+}
+
+  .sidebar {
+    width: 260px;
+    background-color: #1a1435ff;
+    display: flex;
+    flex-direction: column;
+    padding: 20px 10px;
+  }
+
+  .search-box {
+    background-color: #8b8797ff;
+    border-radius: 20px;
+    padding: 8px 15px;
+    margin-bottom: 20px;
+  }
+
+  .search-box input {
+    background: transparent;
+    border: none;
+    color: white;
+    width: 100%;
+    outline: none;
+  }
+
+  .contact-list {
+    overflow-y: auto;
+    flex-grow: 1;
+  }
+
+  .contact-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+    gap: 5px;
+    padding: 8px 10px;
+    border-radius: 12px;
+    transition: 0.2s ease;
+  }
+
+  .contact-item:hover {
+    background-color: #42386eff;
+  }
+
+  .contact-item span {
+    font-size: 18px;
+    color: white;
+  }
+
+.main-content {
+  flex-grow: 1;
+  background-color: #161132ff;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow-y: auto; /* enable scroll */
+  scroll-behavior: smooth; /* make it smooth */
+}
+
+  .chat-header {
+    background-color: #1b1738;
+    padding: 15px 20px;
+    border-bottom: 1px solid #29214b;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .chat-header img {
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+  }
+
+  .chat-header h5 {
+    margin: 0;
+    font-size: 18px;
+    color: white;
+  }
+
+  .chat-body {
+    padding: 20px;
+    overflow-y: auto;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    scroll-behavior: smooth;
+  }
+
+  .message-bubble {
+    padding: 10px 16px;
+    border-radius: 20px;
+    max-width: 65%;
+    word-wrap: break-word;
+    display: inline-block;
+  }
+
+  .sent {
+    background-color: #5c6bc0;
+    color: white;
+    align-self: flex-end;
+  }
+
+  .received {
+    background-color: #3c3c5c;
+    color: white;
+    align-self: flex-start;
+  }
+
+  .chat-input {
+    display: flex;
+    padding: 15px;
+    border-top: 1px solid #29214b;
+    background-color: #1b1738;
+  }
+
+  .chat-input input {
+    flex-grow: 1;
+    background-color: #2a244b;
+    border: none;
+    color: white;
+    border-radius: 20px;
+    padding: 10px 15px;
+    outline: none;
+  }
+
+  .chat-input button {
+    margin-left: 10px;
+    background-color: #5c6bc0;
+    border: none;
+    border-radius: 50%;
+    color: white;
+    padding: 10px 14px;
+    font-size: 18px;
+    cursor: pointer;
+  }
+
+  .chat-input button:hover {
+    background-color: #6f7ad8;
+  }
+</style>
+
+  </head>
+  <body>
+    {% if request.user.is_authenticated %}
+    <div class="line-header">
+      <h5 class="title">Sibilo</h5>
+      <div class="header-right">
+        <div class="profile-s">
+        </div>
+        <div class="user">
+          <p class="mb-0">Acc is logged by {{ user.username }} 🐍</p>
+        </div>
+        </div>
+        <button class="logout-btn"><a href="{% url 'logout' %}">Sign out</a></button>
+      </div>
+    </div>
+
+    <div class="chat-wrapper">
+      <div class="sidebar">
+        <div class="search-box">
+          <input type="text" placeholder="Search" />
+        </div>
+        <div class="contact-list">
+          {% for i in all_user %}
+          {% if i != user %}
+             <a href="{% url 'private_chat' i.username %}" class="text-decoration-none">
+  <div class="contact-item">
+    <span>{{ i.username }}</span>
+  </div>
+</a>
+
+          {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+      <div class="main-content">
+        <div class="main-content w-100 d-flex flex-column" style="justify-content: space-between;">
+  <!-- Chat Header -->
+  <div class="d-flex align-items-center p-3 border-bottom" style="background-color:#1b1738;">
+    <h5 class="mb-0 text-white">{{ other_user.username }}</h5>
+  </div>
+
+  <!-- Messages -->
+  <div class="chat-body" id="chatBody">
+    {% for message in messages %}
+      <div class="mb-2 d-flex {% if message.sender == user %}justify-content-end{% else %}justify-content-start{% endif %}">
+        <div class="p-2 rounded-4" style="
+            background: {% if message.sender == user %}#5c6bc0{% else %}#3c3c5c{% endif %};
+            color: white;
+            max-width: 60%;">
+          {{ message.body }}
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+
+  <!-- Input Box -->
+  <form method="POST" class="d-flex p-3 border-top" style="background-color: #1b1738;">
+    {% csrf_token %}
+    <input name="text_info" type="text" class="form-control me-2 rounded-pill" placeholder="Type a message..." required />
+    <button class="btn btn-primary rounded-pill" type="submit">➤</button>
+  </form>
+</div>
+
+      </div>
+    </div>
+    
+    {% endif %}
+
+
+  </body>
+</html>
