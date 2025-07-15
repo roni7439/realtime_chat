@@ -190,6 +190,25 @@
   .chat-input button:hover {
     background-color: #6f7ad8;
   }
+      @media (max-width: 768px) {
+        .chat-wrapper {
+          flex-direction: column;
+        }
+        .sidebar {
+          width: 100%;
+          padding: 10px;
+        }
+        .toggle-btn {
+          display: block;
+        }
+        .main-content {
+          flex-grow: 1;
+          min-height: 60vh;
+        }
+        .logout-btn {
+          width: 100%;
+        }
+      }  
 </style>
 
   </head>

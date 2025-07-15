@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: django-chat-app
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: daphne myproject.asgi:application --port $PORT --bind 0.0.0.0
+    envVars:
+      - key: DJANGO_SETTINGS_MODULE
+        value: myproject.settings
+      - key: REDIS_URL
+        fromService:
+          name: redis-service
+          type: redis
+          property: connectionString
+
+  - type: redis
+    name: redis-service
+    ipAllowList: []  # Allow all IPs (or specify for security)
