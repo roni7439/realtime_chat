@@ -260,6 +260,58 @@
     
     {% endif %}
 
+<script>
+  const roomName = "{{ room_name|default:'' }}";
+  const userName = "{{ user.username }}";
+
+  if (roomName) {
+    const chatSocket = new WebSocket(
+      "ws://" + window.location.host + "/ws/chat/" + roomName + "/"
+    );
+
+    chatSocket.onmessage = function (e) {
+      const data = JSON.parse(e.data);
+      const message = data.message;
+      const sender = data.sender;
+
+      const chatBody = document.getElementById("chatBody");
+      const messageWrapper = document.createElement("div");
+      messageWrapper.classList.add("mb-2", "d-flex");
+      messageWrapper.classList.add(sender === userName ? "justify-content-end" : "justify-content-start");
+
+      const messageBubble = document.createElement("div");
+      messageBubble.classList.add("p-2", "rounded-4");
+      messageBubble.style.maxWidth = "60%";
+      messageBubble.style.color = "white";
+      messageBubble.style.background = sender === userName ? "#5c6bc0" : "#3c3c5c";
+      messageBubble.innerText = message;
+
+      messageWrapper.appendChild(messageBubble);
+      chatBody.appendChild(messageWrapper);
+      chatBody.scrollTop = chatBody.scrollHeight;
+    };
+
+    chatSocket.onclose = function (e) {
+      console.error("WebSocket closed unexpectedly");
+    };
+
+    const form = document.querySelector("form");
+    const input = form.querySelector("input[name='text_info']");
+
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      const message = input.value;
+      if (message.trim() === "") return;
+
+      chatSocket.send(JSON.stringify({
+        message: message,
+        sender: userName
+      }));
+
+      input.value = "";
+    });
+  }
+</script>
 
   </body>
 </html>

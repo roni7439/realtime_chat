@@ -45,10 +45,13 @@ def private_chat(request, username):
     ).order_by("time")
 
     all_user = User.objects.exclude(username=request.user.username)
+    room_name = f"private_{min(request.user.id, other_user.id)}_{max(request.user.id, other_user.id)}"
 
+    
     return render(request, "chatbox1.html", {
         "user": request.user,
         "other_user": other_user,
         "messages": messages,
         "all_user": all_user,
+        "room_name":room_name,
     })
