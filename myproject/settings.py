@@ -89,12 +89,18 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+import os
+import urllib.parse as urlparse
+
+redis_url = os.getenv("REDIS_URL", "redis://localhost:6379")
+url = urlparse.urlparse(redis_url)
+
 
 CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
-            "hosts": [("redis", 6379)],
+            "hosts": [(url.hostname, url.port)],
         },
     },
 }
