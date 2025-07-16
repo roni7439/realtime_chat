@@ -15,7 +15,7 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-CSRF_TRUSTED_ORIGINS = ['https://realtime-chat-1-6ro9.onrender.com']
+CSRF_TRUSTED_ORIGINS = ['https://*.onrender.com']
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
@@ -111,24 +111,6 @@ DATABASES = {
     'default': dj_database_url.config(default='sqlite:///db.sqlite3', conn_max_age=600)
 }
 
-# import os
-# import urllib.parse as urlparse
-
-# Set up Redis channel layer
-# redis_url = os.getenv("REDIS_URL", "redis://localhost:6379")
-# url = urlparse.urlparse(redis_url)
-
-# CHANNEL_LAYERS = {
-#     "default": {
-#         "BACKEND": "channels_redis.core.RedisChannelLayer",
-#         "CONFIG": {
-#             "hosts": [{
-#                 "address": (url.hostname, url.port),
-#                 "password": url.password,  # remove this line if Redis has no password
-#             }],
-#         },
-#     },
-# }
 
 
 # Password validation
