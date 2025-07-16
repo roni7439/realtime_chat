@@ -85,6 +85,7 @@ ASGI_APPLICATION = 'myproject.asgi.application'
 
 
 # Channel layers using Redis
+
 import os
 import urllib.parse as urlparse
 
@@ -95,12 +96,11 @@ CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
-            "hosts": [{
-                "address": (url.hostname, url.port),
-            }],
+            "hosts": [redis_url],  # this is the fix: pass full URL string, not tuple
         },
     },
 }
+
 
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
