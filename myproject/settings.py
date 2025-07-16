@@ -24,8 +24,8 @@ CSRF_TRUSTED_ORIGINS = ['https://realtime-chat-1-6ro9.onrender.com']
 SECRET_KEY = 'django-insecure-8*idi47i5ij-b(f(u!1z!i72heg=-)ci#+zke_+4apif_l7a!u'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-import os
-DEBUG = False
+
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
@@ -76,12 +76,31 @@ TEMPLATES = [
 ASGI_APPLICATION = 'myproject.asgi.application'
 
 
-CHANNEL_LAYERS = {
-    'default': {
-        'BACKEND': 'channels.layers.InMemoryChannelLayer',  # For development only
-    }
-}
+# CHANNEL_LAYERS = {
+#     'default': {
+#         'BACKEND': 'channels.layers.InMemoryChannelLayer',  # For development only
+#     }
+# }
 
+
+
+# Channel layers using Redis
+import os
+import urllib.parse as urlparse
+
+redis_url = os.getenv("REDIS_URL", "redis://127.0.0.1:6379")
+url = urlparse.urlparse(redis_url)
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [{
+                "address": (url.hostname, url.port),
+            }],
+        },
+    },
+}
 
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
