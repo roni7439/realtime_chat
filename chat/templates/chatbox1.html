@@ -267,10 +267,9 @@
   </div>
 
   <!-- Input Box -->
-  <form method="POST" class="d-flex p-3 border-top" style="background-color: #1b1738;">
-    {% csrf_token %}
-    <input name="text_info" type="text" class="form-control me-2 rounded-pill" placeholder="Type a message..." required />
-    <button class="btn btn-primary rounded-pill" type="submit">➤</button>
+  <form class="d-flex p-3 border-top" style="background-color: #1b1738;">
+    <input id="chat-input" type="text" class="form-control me-2 rounded-pill" placeholder="Type a message..." required />
+    <button id="send-btn" class="btn btn-primary rounded-pill" type="button">➤</button>
   </form>
 </div>
 
@@ -284,9 +283,18 @@
   const userName = "{{ user.username }}";
 
   if (roomName) {
+    const ws_scheme = window.location.protocol === "https:" ? "wss" : "ws";
     const chatSocket = new WebSocket(
-      "ws://" + window.location.host + "/ws/chat/" + roomName + "/"
+      `${ws_scheme}://${window.location.host}/ws/chat/${roomName}/`
     );
+
+    chatSocket.onopen = function () {
+      console.log("WebSocket connected");
+    };
+
+    chatSocket.onerror = function (e) {
+      console.error("WebSocket error", e);
+    };
 
     chatSocket.onmessage = function (e) {
       const data = JSON.parse(e.data);
@@ -314,23 +322,25 @@
       console.error("WebSocket closed unexpectedly");
     };
 
-    const form = document.querySelector("form");
-    const input = form.querySelector("input[name='text_info']");
+const input = document.getElementById("chat-input");
+const sendBtn = document.getElementById("send-btn");
 
-    form.addEventListener("submit", function (e) {
-      e.preventDefault();
-      const message = input.value;
-      if (message.trim() === "") return;
+sendBtn.addEventListener("click", () => {
+  const message = input.value.trim();
+  if (!message) return;
 
-      chatSocket.send(JSON.stringify({
-        message: message,
-        sender: userName
-      }));
+  chatSocket.send(JSON.stringify({
+    message: message,
+    sender: userName
+  }));
 
-      input.value = "";
-    });
+  input.value = "";
+});
+
+
   }
 </script>
+
 
   </body>
 </html>
